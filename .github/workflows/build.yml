@@ -1,0 +1,20 @@
+name: Build Tweak
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Theos
+      run: |
+        export THEOS=~/theos
+        git clone --recursive https://github.com/theos/theos.git $THEOS
+    - name: Build
+      run: |
+        export THEOS=~/theos
+        make package FINALPACKAGE=1
+    - name: Upload Deb
+      uses: actions/upload-artifact@v3
+      with:
+        name: wormix-tweak-deb
+        path: packages/*.deb
